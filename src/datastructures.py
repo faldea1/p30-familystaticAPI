@@ -13,29 +13,28 @@ class FamilyStructure:
         self.last_name = last_name
 
         # example list of members
-        self._members = [{
+        self._members = []
+        self._members.append({
             "id": self._generateId(),
             "first_name": "John",
             "last_name": self.last_name,
             "age": 33,
             "lucky_numbers": [7, 13, 22]
-        }
-        {,
+        })
+        self._members.append({
             "id": self._generateId(),
             "first_name": "Jane",
             "last_name": self.last_name,
             "age": 35,
             "lucky_numbers": [10, 14, 3]
-        },
-        {
+        })
+        self._members.append({
             "id": self._generateId(),
             "first_name": "Jimmy",
             "last_name": self.last_name,
             "age": 5,
             "lucky_numbers": [1]
-        }
-        ]
-
+        })
 
 
     # read-only: Use this method to generate random members ID's when adding members into the list
@@ -43,7 +42,7 @@ class FamilyStructure:
         return randint(0, 99999999)
 
 
-    def add_member(self, member):
+    def add_member(self, member: dict):
         # fill this method and update the return
         incorporate_member = {}
 
@@ -51,7 +50,7 @@ class FamilyStructure:
             member['id']
             incorporate_member['id'] = int(member['id'])
 
-        else
+        else:
             incorporate_member['id'] = self._generateId()
 
         incorporate_member['first_name'] = str(member['first_name'])
@@ -73,14 +72,14 @@ class FamilyStructure:
 
     def get_member(self, id):
         # fill this method and update the return
-        for themember in self._members:
-            if themember['id'] == int(id):
-                return themember
+        for member in self._members:
+            if member['id'] == int(id):
+                return member
 
         return None
 
 
-    def refresh_member(self, id, member):
+    def update_member(self, id, member):
         for position in range(len(self._members)):
             if self._members[position]['id'] == int(id):
                 self._members[position].update(member)

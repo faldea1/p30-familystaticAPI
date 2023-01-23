@@ -31,15 +31,24 @@ def get_members():
     # this is how you can use the Family datastructure by calling its methods
     members = jackson_family.get_all_members()
 
-    return jsonify(members), 200
+    if members:
+        return jsonify(members), 200
+    else:
+        return jsonify({"message": "no members available"}), 404
 
 
 @app.route('/member/<int:member_id>', methods=['GET'])
-def get_member(member_id=None)
+def get_member(member_id):
     member = jackson_family.get_member(member_id)
 
     if member:
-        return jsonify(member), 200
+        response_member = {
+            "id": member.get("id", ''),
+            "first_name": member.get("first_name", ''),
+            "age": member.get("age", ''),
+            "lucky_numbers": member.get("lucky_numbers", [])           
+        }
+        return jsonify(response_member), 200
     else:
         return jsonify({"message": "ID was not found"}), 400
 
@@ -48,32 +57,31 @@ def get_member(member_id=None)
 def add_member():
     data = request.get_json()
 
-    if isinstance(data, dict):
-        jackson_family.add_member(data)
-        return jsonify({"message": "new member incorporated"}), 200
+    if data:
+        return jsonify(jackson_family.add_member(data)), 200
     else:
-        return jsonify({"meesage": "the request has an error"}), 400
+        return jsonify({"message": "member not found"}), 404
 
 
 @app.route('/member/<int:member_id>', methods=['DELETE'])
-def delete_member(member_id=None):
-    member = jackson_family.delete_member(member_id)
+def delete_member(member_id):
+    member_deleted = jackson_family.delete_member(member_id)
 
-    if member: 
-        return jsonify(member), 200
+    if member_deleted: 
+        return jsonify({"done": True, "member_deleted": member_deleted}), 200
     else:
-        return jsonify({"message": "ID was not found"}), 400
+        return jsonify({"message": "ID was not found"}), 404
 
 
 @app.route('/member/<int:member_id>', methods=['PUT'])
-def refresh_member(member_id=None):
+def update_member(member_id):
     data = request.get_json()
-    member = jackson_family.update_member(member_id, data)
+    updated_member = jackson_family.update_member(member_id, data)
 
     if member:
-        return jsonify({"message":"member has been updated"}), 200
+        return jsonify(updated_member), 200
     else:
-        return jsonify({"message":"ID was not found"}), 400
+        return jsonify({"message":"ID was not found for update"}), 404
 
 
 
